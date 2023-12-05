@@ -1,0 +1,48 @@
+plugins: [jekyll-paginate]
+
+permalink: /:categories/:title/
+
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  input:  GFM
+  syntax_highlighter: rouge
+
+
+paginate: 10
+paginate_path: "page/:num"
+baseurl: ""
+
+
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      styles : [highlight.css,post.css]
+      scripts : [post.js]
+
+
+
+title: "黄渭阳的博客"
+email: sincerebravefight@gmail.com
+description: ""
+github:
+  username: hhwyt
+swiftype:
+  searchId: iXZyPokVfxFaBTvi64Y6
+comment:
+    repo: blog
+    client_id: e3a84b2cc39254bd7ab4
+    client_secret: ef2a4a2c21edf19731dde18943438309b0575a2b
+
+url: "https://hhwyt.github.io/blog"
+imgrepo: "https://hhwyt.github.io/blog/static/img"
+
+
+#url: "http://127.0.0.1:4000"
+#imgrepo: "http://127.0.0.1:4000/static/img"
+
