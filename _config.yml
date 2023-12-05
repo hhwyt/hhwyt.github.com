@@ -39,8 +39,8 @@ comment:
     client_id: e3a84b2cc39254bd7ab4
     client_secret: ef2a4a2c21edf19731dde18943438309b0575a2b
 
-url: "https://hhwyt.github.io/blog"
-imgrepo: "https://hhwyt.github.io/blog/static/img"
+url: "https://hhwyt.github.io"
+imgrepo: "https://hhwyt.github.io/static/img"
 
 
 #url: "http://127.0.0.1:4000"
