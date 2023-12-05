@@ -1,7 +1,7 @@
 ---
 layout: post 
 title: B-tree 压缩技术介绍(Oracle,MySQL,PG...
-tags: [database]
+categories: [database]
 ---
 
 本文来聊一下数据库中的 B-tree 压缩技术，探讨以下几个问题：

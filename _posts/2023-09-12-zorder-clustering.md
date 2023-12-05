@@ -1,7 +1,7 @@
 ---
 layout: post 
 title: 几张图弄懂 Z-order clustering
-tags: [database]
+categories: [database]
 ---
 
 你是玩大数据的，你发现主流的湖仓存储都支持 Z-order clustering，你 TM 的还不知道这个是什么玩意儿。我 TM 的花了半个小时，画了 TM 的几张图，九浅一深地给你说明下，什么叫 TM 的 Z-order clustering。

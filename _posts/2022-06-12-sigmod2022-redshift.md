@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 从 SIGMOD 22 论文看 Redshift 的最新进展
-tags: [database]
+categories: [database]
 ---
 
 Redshift 是 cloud-native 数据仓库的鼻祖，是值得我们持续重点关注的数据库产品之一。前段时间，Redshift 团队在 SIMMOD '22 上发表了一篇论文介绍 Redshift 的最新进展，本文来跟进解读一下。

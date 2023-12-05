@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 为什么 CockroachDB 的跨地域性能远超同行
-tags: [database]
+categories: [database]
 ---
 
 欢迎关注我的微信公众号：黄金架构师。

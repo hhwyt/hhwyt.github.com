@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 分布式 Schema 变更在 Google F1 的实践
-tags: [database]
+categories: [database]
 ---
 
 ## 摘要

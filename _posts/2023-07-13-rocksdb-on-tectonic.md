@@ -1,7 +1,7 @@
 ---
 layout: post 
 title: 从 SIGMOD 23 看 RocksDB 的存算分离实践
-tags: [database]
+categories: [database]
 ---
 
 改造 RocksDB 使其支持存算分离，这类工作之前就有团队做过，e.g., RockSet 的 RocksDB-cloud。眼看云时代的存储计算分离是大势所趋（从 share nothing 转向 share storage），RocksDB 官方再也按捺不住自己的大刀了，亲自下场，先搞了一个 RocksDB on Distribute File System(DFS) 试试水（支持 S3 也为期不远？），并在 SIGMOD 23 上发了一篇文章《Disaggregating RocksDB: A Production Experience》，分享自己的一些「分离」经验。今天我们就来快速鉴定一下这篇文章有没有东西，亦或者是「有点东西，但东西不多」。

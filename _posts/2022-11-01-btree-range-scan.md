@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 优化 B-tree 的 range scan 性能
-tags: [database]
+categories: [database]
 ---
 
 欢迎关注我的微信公众号：黄金架构师。

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 分布式锁的设计与实现(PART I)——Chubby
-tags: [distributed systems]
+categories: [distributed systems]
 ---
 # 1 Intro
 

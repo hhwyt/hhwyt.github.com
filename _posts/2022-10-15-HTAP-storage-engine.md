@@ -1,7 +1,7 @@
 ---
 layout: post
 title: HTAP 存储引擎的设计与案例
-tags: [database]
+categories: [database]
 ---
 
 欢迎关注我的微信公众号：黄金架构师。
