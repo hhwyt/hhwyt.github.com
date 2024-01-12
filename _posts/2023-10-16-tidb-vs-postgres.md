@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: 真相！分布式数据库性能可击败传统数据库
 categories: [database]
 ---

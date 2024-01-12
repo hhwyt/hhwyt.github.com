@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: 全网最细！LSM-tree delete 的性能优化
 categories: [database]
 ---

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: LSM-tree 性能优化：Monkey, Dostoevsky
 categories: [database]
 ---

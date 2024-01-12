@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: 为什么 CockroachDB 的跨地域性能远超同行
 categories: [database]
 ---

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: HTAP 存储引擎的设计与案例
 categories: [database]
 ---

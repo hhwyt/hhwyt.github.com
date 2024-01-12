@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: 优化 B-tree 的 range scan 性能
 categories: [database]
 ---

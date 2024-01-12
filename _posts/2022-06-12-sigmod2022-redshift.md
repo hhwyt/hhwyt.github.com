@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: 从 SIGMOD 22 论文看 Redshift 的最新进展
 categories: [database]
 ---

@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: 列存高效更新技术介绍
 categories: [database]
 ---

@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: 几张图弄懂 Z-order clustering
 categories: [database]
 ---

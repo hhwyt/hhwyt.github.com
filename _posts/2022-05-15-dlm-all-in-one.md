@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: 分布式锁的设计与实现(PART I)——Chubby
 categories: [distributed systems]
 ---

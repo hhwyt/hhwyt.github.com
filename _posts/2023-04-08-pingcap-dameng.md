@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: PingCAP 前景分析 vs 达梦,Cockroach (一)
 categories: [investment]
 ---

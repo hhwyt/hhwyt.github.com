@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title:  "分布式 Schema 变更在 Google F1 的实践"
 date:   2021-03-27 00:00:00 +0800
 categories: Distributed Systems
@@ -67,7 +67,7 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 同时由于其全球部署，没有全局成员列表的特点，我们也没法同步地让整个 F1 集群在同一时刻切换到新版本的 Schema。因此，Schema 变更方案必须是**异步**的。换句话说，F1 server 会独立自主地加载 Schema，当且仅当某一时刻集群中所有的 F1 server 都切换到了新版本的 Schema，Schema 变更才算完成。
 
 <center>
-<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/schema-transition.png">
+<img src="{{ site.url }}{{ site.baseurl }}/assets/images/2021-03-27-online-async-schema-change-in-f1/schema-transition.png">
 </center>
 
 
@@ -127,8 +127,8 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 
 
 <center style="display: flex; align-items: start">
-<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/orphan-data-1.png" width="330">
-<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/orphan-data-2.png" width="330" height="340">G
+<img src="{{ site.url }}{{ site.baseurl }}/assets/images/2021-03-27-online-async-schema-change-in-f1/orphan-data-1.png" width="330">
+<img src="{{ site.url }}{{ site.baseurl }}/assets/images/2021-03-27-online-async-schema-change-in-f1/orphan-data-2.png" width="330" height="340">G
 </center>
 <center> orphan data anomaly</center>
 
@@ -144,8 +144,8 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 
 
 <center style="display: flex; align-items: start">
-<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/data-integrity-1.png" width="330">
-<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/data-integrity-2.png" width="350" height="350">
+<img src="{{ site.url }}{{ site.baseurl }}/assets/images/2021-03-27-online-async-schema-change-in-f1/data-integrity-1.png" width="330">
+<img src="{{ site.url }}{{ site.baseurl }}/assets/images/2021-03-27-online-async-schema-change-in-f1/data-integrity-2.png" width="350" height="350">
 </center>
 <center> data integrity anomaly</center>
 

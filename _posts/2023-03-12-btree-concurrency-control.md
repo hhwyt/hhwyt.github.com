@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: B-tree 并发控制的演进
 categories: [database]
 ---

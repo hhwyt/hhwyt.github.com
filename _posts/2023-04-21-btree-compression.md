@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: B-tree 压缩技术介绍(Oracle,MySQL,PG...
 categories: [database]
 ---

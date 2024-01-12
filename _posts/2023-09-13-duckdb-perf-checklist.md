@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: DuckDB 性能测试列表和一些看法
 categories: [database]
 ---

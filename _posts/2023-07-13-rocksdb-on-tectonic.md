@@ -1,5 +1,5 @@
 ---
-layout: post 
+layout: single 
 title: 从 SIGMOD 23 看 RocksDB 的存算分离实践
 categories: [database]
 ---
