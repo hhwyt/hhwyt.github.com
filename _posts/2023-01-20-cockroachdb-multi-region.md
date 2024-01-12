@@ -114,7 +114,7 @@ GLOBAL table 的 closed timestamp，会推进的更激进一些，leader 打个�
 1. 写事务提交会有 commit wait。写事务会等到现实世界的时间戳推进到自己用的未来时间戳，才能提交成功返回。保证了后续的读事务一定能读到已提交的写。
 2. 读事务大部分情况下是非阻塞读。但如果发现写事务的提交时间戳落在了自己的 uncertainty interval 内（这个区间是 HLC 的时钟漂移区间，范围是：[自己的时间戳，自己认为集群中其他节点可能的最大时间戳，时间区间大概是数百 ms]），也需要 commit wait，而且还必须把自己的时间戳推到对方的时间戳并重试，保证能读到对方写的数据。这么做的原因，我这里先就不解释了，读者可以自行思考一下。
 
-![](../static/img/2023-01-29-cockroachdb-multi-region/global-transaction.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-01-29-cockroachdb-multi-region/global-transaction.png)
 
 总结一下， 不得不说，CockroachDB 的跨地域性能确实很强，通过各种花里胡哨的手段，尽量减少了跨地域通信的开销，跨地域能力可圈可点，值得我们学习！至于到底有没有远超同行，相信大家读了本文后心里已经有 B-树 了，也就不用我多说了。
 

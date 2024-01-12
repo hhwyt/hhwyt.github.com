@@ -5,7 +5,7 @@ categories: [database]
 ---
 
 改造 RocksDB 使其支持存算分离，这类工作之前就有团队做过，e.g., RockSet 的 RocksDB-cloud。眼看云时代的存储计算分离是大势所趋（从 share nothing 转向 share storage），RocksDB 官方再也按捺不住自己的大刀了，亲自下场，先搞了一个 RocksDB on Distribute File System(DFS) 试试水（支持 S3 也为期不远？），并在 SIGMOD 23 上发了一篇文章《Disaggregating RocksDB: A Production Experience》，分享自己的一些「分离」经验。今天我们就来快速鉴定一下这篇文章有没有东西，亦或者是「有点东西，但东西不多」。
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img.png)
 
 为什么要搞存储计算分离呢，我一般回答这个问题总会提到成本！成本！成本！存算的池化，资源的共享，能够降低成本。然这篇文章给出的回答是提升 CPU 和 SSD 的利用率。（笑了，虽然说是同一件事，但表达的方式不同，还是我格局大一点，这帮搞存储的眼里只有 SSD :)）
 
@@ -19,9 +19,9 @@ categories: [database]
 
 这个项目所用存储是元宇宙非死不可（Meta Platforms, Inc. (NASDAQ: META），曾用名：Facebook)） 公司的分布式文件系统：Tectonic。关于这个文件系统，也曾发表过文章介绍：《Facebook’s Tectonic Filesystem: Efficiency from Exascale》。考虑到下文的阅读体验，这里我迫不得已简单地介绍一下这个系统。
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_1.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_1.png)
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_2.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_2.png)
 
 Tectonic 文件系统可以简单看成是一个增强版的 HDFS，面向 write-once read-many 的 workload 设计，支持 append 不支持 in-place update。二者同样都是 single-writer 的设计，即同一个文件同一个时刻只能有一个人写，可以有多个人读。
 
@@ -43,9 +43,9 @@ Tectonic 文件系统可以简单看成是一个增强版的 HDFS，面向 write
 
 先来简单鸟瞰一下 RocksDB on Tectonic 的系统架构。
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_3.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_3.png)
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_4.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_4.png)
 
 上面两幅图分别描述了存算不分离和存算分离部署两种形态。在 geo-replication 部署模式下，3 副本部署在不同的数据中心。存算不分离架构，每个副本上的 RocksDB 使用本地的 SSD 来存数据。存算分离的架构，每个副本上的 RocksDB 使用本数据中心的 Tectonic 集群来存数据，这个架构中，RocksDB 所在的节点成为了「计算节点」，Tectonic 集群中的节点是存储节点。由于 Tectonic 是 single-writer 的，多个互为副本的计算节点，只能有一个人写数据。理论上其他人可以读数据，但目前尚未支持，其他人只是干看着。
 
@@ -79,9 +79,9 @@ RocksDB 有很多 list 目录，检查文件存在，查看文件大小的元数
 
 Secondary Cache 在基于 RocksDB on Tectonic 的 ZiipyDB 案例中，将 read IOPS 提升了 50-60%，read latency 提升了 30-40%，效果显著。
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_5.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_5.png)
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_6.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_6.png)
 
 
 第四是 IO 相关的优化工作。
@@ -108,10 +108,10 @@ WAL file 的需求是低尾延时和小 append（sub-block） 的持久化，所
 
 RocksDB on Tectonic 的工作大致介绍完了，接下来我们看一看最终的效果。
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_7.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_7.png)
 上图是写入的测试结果，Sequential Write 即数据有序写入，不需要 compact。Tectonic 和 Local SSD 的 throughput 是差不多的。对于 Random Write，Tectonic 大约慢了 25%。原文给的解释是：`Although Tectonic can provide enough throughput for sequential read and write when operating multiple files, single files’ processing speed is limited and it causes some bottlenecks. Tuning RocksDB compaction knobs would be able to address these bottlenecks, but we leave the default setting for a better comparison.`
 
-![](../static/img/2023-07-13-rocksdb-on-tectonic/img_8.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images/2023-07-13-rocksdb-on-tectonic/img_8.png)
 上图是读取的测试结果。RocksDB on Tectonic 测试了 parallel I/O off 和 on 两种模式。结果显示，Parallel I/O off 模式下，Tectoonic 的不同操作吞吐量大约是 Local SSD 的 5x，Parallel I/O on 模式下，能够优化到 3x。呃，有得必有失，性能会下降一点。
  
 

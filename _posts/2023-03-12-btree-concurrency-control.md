@@ -36,7 +36,7 @@ Latch crabbing 方案为什么解决了上面那两个异象。
 点评一下，latch crabbing 方案相对于锁住整棵树方案，大大提高了并发度，性能得到了提升。不过我们还能看到一些提升空间，比如根结点上读写锁竞争比较激烈，以及子结点不 safe 还有可能锁住子树。
 
 <p align="center">
-    <img src="../static/img/2023-03-12-btree-concurrency-control/img.png">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/2023-03-12-btree-concurrency-control/img.png">
 </p>
 
 再进一步思考一下，子结点不 safe 的情况很常见吗？我们可以积极乐观点假设它不常见。那么有了一个新的方案：**optimistic latching**。
@@ -46,13 +46,13 @@ Optimistic latching 方案具体加锁规则是：
 2. Insert/delete 自上而下加结点的读锁。到达叶子结点后，对叶子结点加写锁。判断叶子结点是否 safe。如果不 safe，放锁，然后用悲观的 latch crabbing 方案重试。
 
 <p align="center">
-    <img src="../static/img/2023-03-12-btree-concurrency-control/img_1.png">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/2023-03-12-btree-concurrency-control/img_1.png">
 </p>
 
 
 显然，这个乐观的方案在写不密集的场景（很少发生 split/merge）性能会表现的很好。然而有时候我们不能盲目乐观。那我们还得沿着悲观的方向继续优化。我们都知道，解决锁竞争的最好办法，就是不用锁，也就是无锁（Lockless）。
 <p align="center">
-    <img src="../static/img/2023-03-12-btree-concurrency-control/img_2.png">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/2023-03-12-btree-concurrency-control/img_2.png">
 </p>
 
 
@@ -81,7 +81,7 @@ Blink-tree 每个结点新增两个东西：
 
 还有两个方案，用两种不同的思路解决了这个问题。
 <p align="center">
-    <img src="../static/img/2023-03-12-btree-concurrency-control/olfit.png">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/2023-03-12-btree-concurrency-control/olfit.png">
 </p>
 
 首先说一下读无锁的 **OLFIT tree** 方案。OLFIT tree 在 Blink-tree 的基础上，每个结点上记录一个结点版本号，对于结点的写操作会增加版本号，结点的读操作在读之前记录一下版本号，在读取后再校验一下版本号，如果版本号变了，就重新读取一遍。
@@ -92,7 +92,7 @@ Blink-tree 每个结点新增两个东西：
 显然，异象 1 和 异象 2 在这里也得到了很好的解决。
 
 <p align="center">
-    <img src="../static/img/2023-03-12-btree-concurrency-control/img_3.png">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/2023-03-12-btree-concurrency-control/img_3.png">
 </p>
 
 
@@ -105,7 +105,7 @@ Bw-tree 中会有一个单独的数据结构 Mapping Table 来存储每个 B-tre
 点评一下 OLFIT tree 和 BW-tree，OLFIT tree 相对于 Bw-tree 来说更简单。至于性能，我们得区分内存 B-tree 和外存 B-tree 两种版本来比较。先比较下内存版本。我们可以看到，Bw-tree 的实现的结点外挂的无锁链表对于 CPU cache 不友好，并发更新同一个结点会有一个会失败需要重试，虽然 OLFIT tree 也有可能发生重读结点（甚至是结点被并发线程仅仅是追加了一条数据就需要重读），总的来说，OLFIT tree 性能是更好一些的。这个结论可以参见 open-bwtree 的论文《Building a Bw-Tree Takes More Than Just Buzz Words》。再比较下外存版本。我们知道，凡是涉及到外存，瓶颈就转到磁盘上了。由于 Bw-tree 是 out-of-place update 的（更新不改节点数据只插入链表头部，换句话说，更新全部是 append-only 的），很容易在磁盘上实现成一个 log-structured 的结构，因此 Bw-tree 的更新可以利用上磁盘顺序写远大于随机写的特性，得到高于 OLFIT tree 的吞吐。
 
 <p align="center">
-    <img src="../static/img/2023-03-12-btree-concurrency-control/img_4.png">
+    <img src="{{ site.url }}{{ site.baseurl }}/assets/images/2023-03-12-btree-concurrency-control/img_4.png">
 </p>
 
 本文的最后，简单总结一下。我用上面这幅图简单描绘了 B-tree 并发控制方案的演进历程（还有一个 MassTree 限于篇幅，就不提了，大家感兴趣可自行搜索一下），从优化锁粒度（从树级别的锁到结点级别的 latch crabbing），沿着两条路线发展，一种路线是乐观的方案（optimistic latching），另一种路线是无锁的方案，有读无锁的方案（Blink-tree，OLFIT tree），读写都无锁的方案（Bw-tree）。这些锁优化的思路非常实用，对于我们这些基础软件程序员来说还是很有帮助的，大家可以多多了解一下，工作中早晚用得上。

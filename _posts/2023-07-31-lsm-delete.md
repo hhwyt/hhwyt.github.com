@@ -10,7 +10,7 @@ categories: [database]
 
 首先来回顾一下传统上 LSM-tree 的 delete 是如何做的。
 
-![](../assets/image/2023-07-31-lsm-delete/img.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2023-07-31-lsm-delete/img.png)
 
 LSM-tree 是一个面向写优化的数据结构，所有写操作都是 out-of-place update 的。它的 delete 操作是通过插入一个 delete tombstone 来 invalid 先前插入的 KV （该 KV 可能被 update 过，有多个物理版本）实现的，之后通过一层又一层的 compaction，直到最后一层，确认 KV 的所有版本都被清理掉后，再将 delete tombstone 清理掉。
 
@@ -52,9 +52,9 @@ LSM-tree 是一个面向写优化的数据结构，所有写操作都是 out-of-
 
 ### 优化 range delete
 
-![](../assets/image/2023-07-31-lsm-delete/img_1.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2023-07-31-lsm-delete/img_1.png)
 
-![](../assets/image/2023-07-31-lsm-delete/img_2.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2023-07-31-lsm-delete/img_2.png)
 
 为了解决 range delete 生成的大量 delete tombstone 带来的各种放大问题，RocksDB 引入了 range tombstone。
 
@@ -91,7 +91,7 @@ Lethe 是基于 RocksDB 的一个学术 demo，设计了 KiWi 和 FADE 两个方
 
 ### KiWi 优化 non-sort key 的 range delete 问题
 
-![](../assets/image/2023-07-31-lsm-delete/img_3.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2023-07-31-lsm-delete/img_3.png)
 上图是 KiWi 对 SST 文件格式的修改。原本 SST 文件是一个两层的结构：file -> page(block)，文件内的数据按 sort-key 排序。KiWi 改成了一个三层结构：file -> delete tile -> page(block)， delete tile 间按照 sort-key 排序，page 间按照 non-sort key(delete key) 排序，page 内又按照 sort-key 排序。
 
 在这个格式下，KiWi 的 fence pointer 是 delete tile 级别的（RocksDB 是 block 级别的），Bloomfilter 与 RocksDB 一样是 page 级别的。此外，在 delete tile 内部还有一个 page 级别的 delete fence pointers，用来配合 delete tombstone 在 compaction 的时候做 full page drop。
@@ -105,7 +105,7 @@ KiWi 总体上是牺牲了 sort key range scan 的性能，换取了 non-sort ke
 
 ### FADE 解决 time-bounded delete 问题
 
-![](../assets/image/2023-07-31-lsm-delete/img_4.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2023-07-31-lsm-delete/img_4.png)
 这个方案说起来其实比较简单。
 
 大致是做了这么几件事：
@@ -115,7 +115,7 @@ KiWi 总体上是牺牲了 sort key range scan 的性能，换取了 non-sort ke
 
 呃，没了，实现 time-bounded delete 就这么简单。。。
 
-![](../assets/image/2023-07-31-lsm-delete/img_5.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2023-07-31-lsm-delete/img_5.png)
 
 对于这个方案，我比较关注的是按照过期时间来选择要 compact 的文件而不是像 RocksDB 一样选择与下层重叠最少的文件会不会造成非常大的写放大。
 

@@ -46,7 +46,7 @@ A：在本文的语境下，coarse-grained locks 指的是持有时间长，加�
 
 Chubby 支持多集群部署，单个集群叫 Chubby cell。Chubby cell 有自己的 name，client 指定 Chubby cell name，在 DNS lookup 时解析到具体的地址，然后去访问对应的 Chubby cell（下文 「2.2.3 Data Model」一节会介绍 Chubby cell name 如何指定）。
 
-![1652599659546.png](../static/img/2022-05-15-dlm-all-in-one/1652599659546.png "System structure")
+![1652599659546.png]({{ site.url }}{{ site.baseurl }}/assets/images/2022-05-15-dlm-all-in-one/1652599659546.png "System structure")
 
 上图是一个典型 Chubby cell 的系统架构。cell 内部有 5 个 server，基于 Paxos 做 replication，用来实现 high available，其中一个 replica 是 master。 为了实现 Linearizability，Chubby 的所有读写操作都会走 master。Chubby client 是一堆进程。client applicaiton 通过 Chubby library 来和 Chubby replicas 进行 RPC 交互。由于读写操作只能走 master，client 在第一次访问 Chubby cell 时，会先根据 DNS 提供的 replicas 列表，向它们发送 master location 请求获取 master 的地址，然后和 master 建立连接，再进入到正常读写流程。
 
@@ -155,7 +155,7 @@ Chubby 支持的 event 主要分为两类：
 
 Chubby 侧重于 reliability 和 availability，上文已经提到过的 replication 就是一个提升 reliability 和 availability 的有效手段。这里我们再看一下，Chubby 如何通过的优雅（grace）的 fail-over 机制来提升 reliability。
 
-![1652673093622.png](../static/img/2022-05-15-dlm-all-in-one/1652673093622.png)
+![1652673093622.png]({{ site.url }}{{ site.baseurl }}/assets/images/2022-05-15-dlm-all-in-one/1652673093622.png)
 
 上图描述了当 master 发生 fail-over（从 old master 切到 new master）时发生了什么。时间线是从左到右的，我们也从左到右看。在 lease C1 的有效期内 client 发送 KeepAlive 请求（1）到 old master，old master block 住这个请求直到 client lease 快要过期才回复（2），同时 old master 视角的 client lease（这个 lease 是从回复 KeepAlive RPC 的时刻算起的，考虑到 RPC 传输的时间，实际会大于真实的 client lease 一点点） 变成了 M2，收到 KeepAlive 回复后，client lease 变成了 C2，紧接着 client 立即发起下一个 KeepAlive 请求（3）。不幸的是，old master 挂了，KeepAlive 请求很久没有得到回复，client lease C2 过期后进入 grace period（默认时长为 45s），同时会产生一个 jeopardy event（client application 可以观测到这个 event，可按需做一些处理逻辑）。在 grace period 期间 client 的所有请求都被 pending（相当于我们的静态*管理）。万幸，new master 在此期间选举成功了，new master 直接为 client 分配上它认为的 old master 可能为 client 分配的最大 lease（lease 时长是由 master 控制的，下文「 2.2.6 Performance Stuff」会详细介绍）。一段时间后，client 再次发起的 KeepAlive 请求（4）终于联系上了 new master。不过由于 epoch number （下面会介绍）错误，请求被拒绝并告知最新的 epoch number（5）。接着 client 拿着新的 epoch number 再次发起 KeepAlive 请求（6），收到回复（7）后，grace period 结束，产生一个 safe event（同样，client application 可按需处理。如果没有从 grace period 幸存下来，就会产生一个 expired event。）。这时 client lease 变成了 C3，然后立即发起 下一个KeepAlive 请求（8），后续就是正常流程了。
 

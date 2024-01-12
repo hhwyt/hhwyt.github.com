@@ -24,13 +24,13 @@ categories: [database]
 
 这里引出用 B-tree 压缩来提升性能的两种做法。
 
-![面向 IOPS 优化：内存和磁盘 page 存同样的压缩的数据](../static/img/2023-04-21-btree-compression/img.png)
+![面向 IOPS 优化：内存和磁盘 page 存同样的压缩的数据]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img.png)
 
 一种是面向 IOPS 优化。具体的做法是，数据直接以轻量压缩（e.g., prefix compression）后的形态存储在内存 page，内存 page 和它对应的磁盘 page 大小相等，存储的东西完全一样。
 由于内存和磁盘 page 中存储的都是压缩后的数据，单个 page 能存的数据量相对不压缩来说就更多了，B-tree 的扇出（fan-out）增加了。在数据总量不变的情况下，B-tree 垂直方向上高度减小，水平方向上宽度减小，总的结点数变少了。由于树高减小了，B-tree 的所有操作在下降过程中需要访问的结点数变少了，range scan 操作由于单个叶子结点能存更多的数据了，在需要扫描的数据总条数不变的情况下，扫描叶子结点数变少了。要读的结点数少了，磁盘 IO 次数就少了，整体吞吐量得到提升。
 
 
-![面向带宽优化：只在磁盘 page 存压缩的数据](../static/img/2023-04-21-btree-compression/img_1.png)
+![面向带宽优化：只在磁盘 page 存压缩的数据]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_1.png)
 
 另一种是面向带宽（bandwidth）优化。具体的做法是，数据以未压缩的形态存储在内存 page 中，内存 page 刷盘时压缩，以通用压缩（e.g., zlib, lz4）后的形态存储在磁盘 page 中，磁盘 page 比它对应的内存 page 更小。这种做法下，读写结点的磁盘 page 产生的 IO 大小变小了，消耗的带宽更少了，然而由于这种做法没有增加单个内存 page 能存的数据量，B-tree 结点的扇出没有增加，所有 B-tree 操作需要的 IO 次数没变，对优化 IOPS 没有帮助，所以这种做法对性能的优化很小，主要作用还是在节省存储空间上。
 
@@ -42,7 +42,7 @@ categories: [database]
 
 先来看一下 Postgres。
 
-![Deduplication in Postgres](../static/img/2023-04-21-btree-compression/img_2.png)
+![Deduplication in Postgres]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_2.png)
 
 Postgres 可能是由于缺钱没人干活的原因，只支持了简单的 deduplication 压缩。顾名思义，deduplication 就是针对重复的 key 进行的压缩。在非 unique index 中，可能存在很多重复的 key（其实 unique index 中也可能存在少量重复的因为 MVCC）。对于 page 内重复的 key，我们倾向于只存一份以节省空间。举例，未压缩的形态是 {key:TID1,key:TID2,key,TID2...}，压缩后的形态是 key + TID list，即 {key:TID1,TID2,TID2...}。（这里的 TID 即 tuple id，指向表的一行记录。下文的 ROW ID，RID 和这个玩意是同一个东西。）
 
@@ -54,7 +54,7 @@ Postgres 可能是由于缺钱没人干活的原因，只支持了简单的 dedu
 
 接着看一下商业数据库的开创者 Oracle，传统商业数据库三傻之中的大傻（按市场份额排名）。
 
-![Prefix Compression in Oracle](../static/img/2023-04-21-btree-compression/img_3.png)
+![Prefix Compression in Oracle]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_3.png)
 
 Oracle 支持的压缩算法就比较全面了。包括：
 1. Duplicate Key Removal。这就是 Postgres 中的 Deduplication。
@@ -71,7 +71,7 @@ Oracle 支持的压缩算法就比较全面了。包括：
 接着看一下传统商业数据库三傻之中的二傻 SQL Server。
 
 
-![SQL Server Compression](../static/img/2023-04-21-btree-compression/img_4.png)
+![SQL Server Compression]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_4.png)
 
 SQL 支持三种压缩算法：
 1. Row compression。包括 a. 对 key 中 column 的 length 和 offset 进行压缩。(没看到具体说怎么干的) b. 对数值类型（e.g., int, numeric）进行 varint 编码（不了解 varint 的同学可以自行 google 一下，限于篇幅这里不详细介绍）。
@@ -84,7 +84,7 @@ SQL Server 什么时候做压缩呢？Page 写满要 split 的时候压缩（和
 
 最后看一下传统商业数据库三傻之中的三傻 DB2。
 
-![DB2 Compression](../static/img/2023-04-21-btree-compression/img_5.png)
+![DB2 Compression]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_5.png)
 
 DB2 支持的压缩算法有：
 1. RID List Compression。相当于 Postgres 的 Deduplication。
@@ -97,14 +97,14 @@ DB2 支持的压缩算法有：
 MySQL 的 InnoDB 实现了两种 B-tree 压缩方案。
 
 
-![MySQL Page Compression](../static/img/2023-04-21-btree-compression/img_6.png)
+![MySQL Page Compression]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_6.png)
 
 我们先来看一下 Page Compression 方案。该方案利用内核的 punching hole 技术，直接在文件中打洞（在文件中间打洞，即删除文件中间的某一段空间，不影响文件后面 page 的偏移）。数据以未压缩的形态写入到内存 page，直到刷盘时才用通用的压缩算法（e.g., zlib, lz4）压缩一下刷到对应的磁盘文件 page，这一步刷的是压缩后的数据所以可以减小带宽消耗。逻辑上内存 page 和对应的磁盘文件 page 的大小是一样的，但由于磁盘文件 page 存储的是压缩后的数据，这个 page 内有一部分尾部空间没有用上，就可以调用 punching hole 相关的系统调用在物理上删除掉这段没有用到的空间。这样操作下来，物理上磁盘 page 的真实大小变小了，节省了存储空间。不过由于这个方案内存中的 page 存储的是未压缩的数据，所以 B-tree 的扇出没有增加，结点数没有减少，所以对 IOPS 没有优化。
 
 点评一下这个方案，这个方案实现起来比较简单，不用自己实现压缩算法，直接用现成的通用压缩算法 + punching hole 技术就实现了压缩功能。压缩率一般。由于 puching hole 打洞的基本单位是 4K，对于 16K 的 page，极限也就压缩到 4K（打洞 12K），压缩率上界为 4 倍。此外，这个方案性能也有一些问题，punching hole 技术会导致文件碎片化，内核维护开销大，性能很差，例如[这里](https://www.percona.com/blog/innodb-page-compression/)提到的拷贝文件巨慢的问题 。尽管该方案优化了带宽，但这点优化相比 puching hole 的性能劣化算是小巫见大巫了。基于此，我个人不推荐这个方案。
 
 
-![MySQL Table Compression](../static/img/2023-04-21-btree-compression/img_7.png))
+![MySQL Table Compression]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_7.png))
 
 
 接着我们再看一下 MySQL 的 Table Compression 方案。该方案直接写死一个磁盘上的 page 大小（前提保证磁盘 page 大小 < 内存 page 大小），内存 page 在刷盘的时候用通用的压缩算法（e.g., zlib, lz4）压缩一下，如果压缩后的大小能放入磁盘上的 page，就正常刷下去（这一步优化了带宽消耗）。否则，内存 page 先 split 再次压缩后才能刷下去。
@@ -115,7 +115,7 @@ MySQL 的 InnoDB 实现了两种 B-tree 压缩方案。
 
 当然不会这么拉胯，毕竟也是搞了这么多年的老牌关系数据库了。
 
-![双缓存：同时缓存未压缩和压缩的 page](../static/img/2023-04-21-btree-compression/img_8.png)
+![双缓存：同时缓存未压缩和压缩的 page]({{ site.url }}{{ site.baseurl }}/assets/images/2023-04-21-btree-compression/img_8.png)
 
 Table Compression 方案通过另外的「旁门左道」实现了面向 IOPS 优化：在 buffer pool 内存中已缓存未压缩的 page 的基础上，再缓存一下压缩后的 page，也就是所谓的「双缓存」。此外，还会把压缩后的 page 作为一等公民，buffer pool 在内存不足只会先去剔除未压缩的 page。由于留下来的压缩后的 page 消耗的内存更小，buffer pool 能缓存 page 数量更多，缓存命中率就提升上去了，读写结点带来的 IO 次数就减少了，算是绕了一点路实现了面向 IOPS 优化，提升了性能。
 
