@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c6eee823-8264-4b65-a1ee-e1dcf7d99df3" name="Changes" comment="Update title" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="bm1ww2zp" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2YAj3OPtEaFqLzEmRVSUTb81Y72" />
+  <component name="ProjectViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/hwy/dev/hhwyt.github.io"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/_posts" />
+      <recent name="$PROJECT_DIR$/static/img" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c6eee823-8264-4b65-a1ee-e1dcf7d99df3" name="Changes" comment="" />
+      <created>1699975077930</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1699975077930</updated>
+      <workItem from="1699975082605" duration="8000" />
+      <workItem from="1701703599775" duration="1321000" />
+      <workItem from="1701759359930" duration="3532000" />
+      <workItem from="1701766922493" duration="235000" />
+      <workItem from="1701770932970" duration="21000" />
+      <workItem from="1701770989622" duration="40000" />
+      <workItem from="1701779313581" duration="3604000" />
+      <workItem from="1701828730734" duration="185000" />
+      <workItem from="1701829709907" duration="4000" />
+      <workItem from="1701840930303" duration="50000" />
+      <workItem from="1701841308440" duration="158000" />
+      <workItem from="1701849619106" duration="71000" />
+      <workItem from="1701849880791" duration="1000" />
+      <workItem from="1701850438680" duration="44000" />
+    </task>
+    <task id="LOCAL-00001" summary="Arguments">
+      <option name="closed" value="true" />
+      <created>1701703720189</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1701703720189</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Arguments">
+      <option name="closed" value="true" />
+      <created>1701704539314</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701704539314</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Arguments">
+      <option name="closed" value="true" />
+      <created>1701704705105</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701704705105</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Refactor theme">
+      <option name="closed" value="true" />
+      <created>1701758977748</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701758977749</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1701760187263</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1701760187264</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Fix bug">
+      <option name="closed" value="true" />
+      <created>1701760591953</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1701760591954</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add my blogs">
+      <option name="closed" value="true" />
+      <created>1701761209847</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1701761209847</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Fix talk-repo address">
+      <option name="closed" value="true" />
+      <created>1701761664298</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1701761664299</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Fix talk-repo address">
+      <option name="closed" value="true" />
+      <created>1701762118647</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1701762118647</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Use categorie rather than tag">
+      <option name="closed" value="true" />
+      <created>1701762844969</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1701762844969</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Fix img size">
+      <option name="closed" value="true" />
+      <created>1701763069690</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1701763069690</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add CNAME">
+      <option name="closed" value="true" />
+      <created>1701763176615</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1701763176615</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701763460999</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1701763460999</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701779473843</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1701779473843</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701779676756</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1701779676756</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701780204736</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1701780204736</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701780276135</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1701780276135</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701780456941</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1701780456941</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701780620573</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1701780620573</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Fix img">
+      <option name="closed" value="true" />
+      <created>1701780938467</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1701780938467</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Refactor argument">
+      <option name="closed" value="true" />
+      <created>1701783277553</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1701783277553</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Refactor argument">
+      <option name="closed" value="true" />
+      <created>1701783999859</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1701783999859</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Fix email">
+      <option name="closed" value="true" />
+      <created>1701789584150</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1701789584150</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Fix layout">
+      <option name="closed" value="true" />
+      <created>1701789932710</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1701789932710</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Temporarily disabled search engine">
+      <option name="closed" value="true" />
+      <created>1701790515618</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1701790515618</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Fix layout">
+      <option name="closed" value="true" />
+      <created>1701828751755</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1701828751755</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Fix layout">
+      <option name="closed" value="true" />
+      <created>1701828900038</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1701828900038</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Fix layout">
+      <option name="closed" value="true" />
+      <created>1701840967882</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1701840967882</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Update title">
+      <option name="closed" value="true" />
+      <created>1701850467996</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1701850467997</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="ca62da50-0721-4ec2-9416-a6d6781a3947" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="ca62da50-0721-4ec2-9416-a6d6781a3947">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Arguments" />
+    <MESSAGE value="Refactor theme" />
+    <MESSAGE value="Initial commit" />
+    <MESSAGE value="Fix bug" />
+    <MESSAGE value="Add my blogs" />
+    <MESSAGE value="Fix talk-repo address" />
+    <MESSAGE value="Use categorie rather than tag" />
+    <MESSAGE value="Fix img size" />
+    <MESSAGE value="Add CNAME" />
+    <MESSAGE value="Fix img" />
+    <MESSAGE value="Refactor argument" />
+    <MESSAGE value="Fix email" />
+    <MESSAGE value="Temporarily disabled search engine" />
+    <MESSAGE value="Fix layout" />
+    <MESSAGE value="Update title" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update title" />
+  </component>
+</project>
