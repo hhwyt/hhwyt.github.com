@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "分布式 Schema 变更在 Google F1 的实践!"
+title:  "分布式 Schema 变更在 Google F1 的实践"
 date:   2021-03-27 00:00:00 +0800
 categories: Distributed Systems
 ---
