@@ -37,7 +37,7 @@ F1 是 Google 家的一款分布式关系数据库，它具备以下特点：
   - F1 不存储全局成员列表。一来没有必要存，二来即便有全局成员列表，也没办法用它来做 F1 集群的全局同步，毕竟全球节点间的通信代价不菲。
 
 
-![](../static/img/2021-03-27-online-async-schema-change-in-f1/architecture.png)
+![](../assets/image/2021-03-27-online-async-schema-change-in-f1/architecture.png)
 
 <center>F1 架构图 </center>
 
@@ -54,7 +54,7 @@ F1 是一个典型的「SQL on NoSQL」的架构，关系数据库中的 Row（�
 
 这里贴上论文中给出的一张示意图，非常直观。
 
-![](../static/img/2021-03-27-online-async-schema-change-in-f1/row-representation.png)
+![](../assets/image/2021-03-27-online-async-schema-change-in-f1/row-representation.png)
 
 
 
@@ -66,7 +66,7 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 同时由于其全球部署，没有全局成员列表的特点，我们也没法同步地让整个 F1 集群在同一时刻切换到新版本的 Schema。因此，Schema 变更方案必须是**异步**的。换句话说，F1 server 会独立自主地加载 Schema，当且仅当某一时刻集群中所有的 F1 server 都切换到了新版本的 Schema，Schema 变更才算完成。
 
 <center>
-<img src="../static/img/2021-03-27-online-async-schema-change-in-f1/schema-transition.png">
+<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/schema-transition.png">
 </center>
 
 
@@ -126,8 +126,8 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 
 
 <center style="display: flex; align-items: start">
-<img src="../static/img/2021-03-27-online-async-schema-change-in-f1/orphan-data-1.png" width="330">
-<img src="../static/img/2021-03-27-online-async-schema-change-in-f1/orphan-data-2.png" width="330" height="340">G
+<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/orphan-data-1.png" width="330">
+<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/orphan-data-2.png" width="330" height="340">G
 </center>
 <center> orphan data anomaly</center>
 
@@ -143,8 +143,8 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 
 
 <center style="display: flex; align-items: start">
-<img src="../static/img/2021-03-27-online-async-schema-change-in-f1/data-integrity-1.png" width="330">
-<img src="../static/img/2021-03-27-online-async-schema-change-in-f1/data-integrity-2.png" width="350" height="350">
+<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/data-integrity-1.png" width="330">
+<img src="../assets/image/2021-03-27-online-async-schema-change-in-f1/data-integrity-2.png" width="350" height="350">
 </center>
 <center> data integrity anomaly</center>
 
@@ -174,7 +174,7 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 - WriteOnly
   - Schema 对所有 write 操作可见，包括 delete，update，insert。对 read 操作不可见。
 
-![](../static/img/2021-03-27-online-async-schema-change-in-f1/schema-change-process.png)
+![](../assets/image/2021-03-27-online-async-schema-change-in-f1/schema-change-process.png)
 
 <center> CREATE INDEX 的 Schema 状态转换图 </center>
 
@@ -235,7 +235,7 @@ ADD CONSTRAINT 不存在孤儿数据的问题，所以 DeleteOnly 状态就可�
 
 
 
-![](../static/img/2021-03-27-online-async-schema-change-in-f1/all-schema-changes.png)
+![](../assets/image/2021-03-27-online-async-schema-change-in-f1/all-schema-changes.png)
 
 上图是论文中给出的所有 Schema 变更的状态转换。其中 Change lock coverage 是 F1 特有的机制，略去不表。
 
@@ -257,7 +257,7 @@ F1 没有全局成员列表，如何协调 F1 server 一步步地做 Schema 的�
 
 F1 团队给出的答案是 Schema lease。每个 F1 server 都会被授予一个 Schema 的 lease，lease 时长通常为数分钟，F1 server 需要在 lease 过期前重新续约（F1 的实践是 lease 时长过了一半就续约），并按需加载新版本的 Schema。如果不能成功续约，则 F1 server 直接自杀（托管系统会自动重启它）。
 
-![](../static/img/2021-03-27-online-async-schema-change-in-f1/schema-change-process-with-lease.png)
+![](../assets/image/2021-03-27-online-async-schema-change-in-f1/schema-change-process-with-lease.png)
 
 <center> CREATE INDEX 的 Schema 状态转换图（包含 lease） </center>
 

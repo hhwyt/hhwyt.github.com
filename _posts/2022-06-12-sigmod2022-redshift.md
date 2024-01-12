@@ -8,7 +8,7 @@ Redshift 是 cloud-native 数据仓库的鼻祖，是值得我们持续重点关
 
 在进入本文正文之前，我们先来简单回顾下初代 Redshift。初代 Redshift 产品发布于 2013 年，论文发表于 2015 年。从技术的角度看，初代 Redshift 与一些传统（on-premises）数仓差异不大，它的真正创新之处把传统的 MPP 数仓挪了个窝，搬到了云上，搞成了所谓的 cloud-native。俗话说的好，「人挪死，树挪活」，Redshift 这个换了个环境的 MPP 数据库立刻呈现出旺盛的生命力，像生物入侵一样，迅速地侵占传统数据库厂商的地盘，切下一块块蛋糕。
 
-![img](../static/img/2022-06-12-sigmod2022-redshift/02-NodeRelationships.png)
+![img](../assets/image/2022-06-12-sigmod2022-redshift/02-NodeRelationships.png)
 
 我认为，cloud-native 赋能给初代 Redshift 相对于传统数仓的两点显著优势：	
 
@@ -50,7 +50,7 @@ Redshift 团队在初代 Redshift 之后所做的工作，我按照我的认知�
 
 # 系统架构
 
-![image-20220702163359180](../static/img/2022-06-12-sigmod2022-redshift/image-20220702163359180.png)
+![image-20220702163359180](../assets/image/2022-06-12-sigmod2022-redshift/image-20220702163359180.png)
 
 逻辑上看，Redshift 分为了三层：
 

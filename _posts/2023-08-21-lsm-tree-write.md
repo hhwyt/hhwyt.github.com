@@ -11,7 +11,7 @@ categories: [database]
 # Naive 写入流程
 在了解 LevelDB 和 RocksDB 的写入流程之前，我们先来看看 naive 的 LSM-tree 写入流程是怎么样的。
 
-![LSM-tree 架构](../static/img/2023-08-21-lsm-tree-write/img.png)
+![LSM-tree 架构](../assets/image/2023-08-21-lsm-tree-write/img.png)
 
 假设我们要往一个支持持久化的 LSM-tree 写入一个 KV，至少需要经过几步呢？我想最简的步骤大概是这样的：
 1. 把这个 KV 追加写到 WAL 日志，并强制刷盘（保证持久化）。
@@ -28,7 +28,7 @@ categories: [database]
 
 了解 LevelDB 的人都知道它有一个 WriteBatch 的概念，WriteBatch 表示一批 KV，LevelDB 允许以 WriteBatch 为单位写入（批量写入），而不是以单个 KV 为单位一个一个写入，这已经是一层 batch 的优化。不过需要注意，这个优化是需要 RocksDB 的用户来协作（构造 WriteBatch）的。倘若用户故意不协作（恶意单个单个的干），或者协作后性能还达不到要求怎么办？LevelDB 写入流程里面第二层的 batch 就适时登场了。
 
-![LevelDB 写入流程](../static/img/2023-08-21-lsm-tree-write/img_1.png)
+![LevelDB 写入流程](../assets/image/2023-08-21-lsm-tree-write/img_1.png)
 
 LevelDB 的写入流程如上图所示，我将之归纳为「三步走」战略（向你党惯用法靠拢）：
 1. 步：**紧急集合！**这一步将形成出一个 batch。并发的写线程（Thread 1,2,3）入队集合，第一个到的（Thread 1）由于行动迅速被选为组长（Group Leader），这一组的人形成了一个 batch（准确的说是 batch of batches，因为它是 batch of WriteBatches。）。有些反映迟钝的人（Thread 4）来的慢了，只能去下一组了。
@@ -51,7 +51,7 @@ LevelDB 的写入流程如上图所示，我将之归纳为「三步走」战略
 
 ## 优化 1：并发（写 memtable）
 
-![RocksDB 写入流程（并发写 memtable）](../static/img/2023-08-21-lsm-tree-write/img_2.png)
+![RocksDB 写入流程（并发写 memtable）](../assets/image/2023-08-21-lsm-tree-write/img_2.png)
 
 针对串行写 memtable 的问题，RocksDB 支持了并发写 memtable。
 
@@ -67,7 +67,7 @@ LevelDB 的写入流程如上图所示，我将之归纳为「三步走」战略
 不过我们仍然可以看到，写 WAL + memtable 整体上仍是多组之间串行执行的，在并发度上还有进一步的提升空间。
 
 ## 优化 2：Pipeline（写 WAL + memtable）
-![RocksDB 写入流程（并发 + pipeline）](../static/img/2023-08-21-lsm-tree-write/img_3.png)
+![RocksDB 写入流程（并发 + pipeline）](../assets/image/2023-08-21-lsm-tree-write/img_3.png)
 
 
 RocksDB 又引入了 [Pipeline Write](https://github.com/facebook/rocksdb/wiki/Pipelined-Write) 来解决写 WAL + memtable 整体串行执行的问题。
@@ -112,7 +112,7 @@ RocksDB 在 LevelDB 的基础上，对 LSM-tree 写入 memtable 做了并发的�
 如果您觉得这篇文章对您有用，劳烦帮忙点赞分享下，非常感谢您的支持！
 如果您还没有关注我，那我给您跪下了，赶紧关注我，我（非常认真地）谢谢你啊！
 
-![扫一下我哦](../static/img/2023-08-21-lsm-tree-write/img_4.png)
+![扫一下我哦](../assets/image/2023-08-21-lsm-tree-write/img_4.png)
 
 # 参考
 1. https://github.com/facebook/rocksdb/wiki/Pipelined-Write
