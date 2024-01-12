@@ -4,10 +4,6 @@ title: HTAP 存储引擎的设计与案例
 categories: [database]
 ---
 
-欢迎关注我的微信公众号：黄金架构师。
-
----
-
 这篇文章直接贴上一个之前写的 PPT :)
 
 ![]({{ site.url }}{{ site.baseurl }}/assets/images//2022-10-15-HTAP-storage-engine/HTAP%20存储引擎的设计与实现.001.jpeg)
