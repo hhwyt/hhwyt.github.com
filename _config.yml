@@ -288,6 +288,7 @@ defaults:
       type: posts
     values:
       layout: single
+      # DON'T display follow button.
       author_profile: false
       read_time: true
       comments: true
