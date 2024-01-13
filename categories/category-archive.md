@@ -2,6 +2,6 @@
 title: "文章分类"
 layout: categories
 permalink: /categories/
-author_profile: false
+author_profile: true
 classes: wide
 ---

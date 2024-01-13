@@ -109,10 +109,10 @@ author:
 #  bio              : "I am an **amazing** person."
   location         : "Beijing"
   email            : hhwyt1@gmail.com
-#  links:
-   # - label: "Email"
-   #   icon: "fas fa-fw fa-envelope-square"
-   #   url: "hhwyt1@email.com"
+  links:
+    - label: "知乎"
+      icon: "far fa-lightbulb"
+      url: "https://www.zhihu.com/people/huang-wei-yang-70"
     #- label: "Website"
     #  icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"
@@ -289,7 +289,7 @@ defaults:
     values:
       layout: single
       # DON'T display follow button.
-      author_profile: false
+      author_profile: true
       read_time: true
       comments: true
       share: true
