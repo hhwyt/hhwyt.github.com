@@ -106,12 +106,12 @@ analytics:
 author:
   name             : "黄渭阳"
   avatar           : "/assets/images/mylogo.jpeg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-#  bio              : "I am an **amazing** person."
+  bio              : "I am an **amazing** person."
   location         : "Beijing"
   email            : hhwyt1@gmail.com
   links:
     - label: "知乎"
-      icon: "far fa-lightbulb"
+      icon: "fas fa-fw fa-lightbulb"
       url: "https://www.zhihu.com/people/huang-wei-yang-70"
     #- label: "Website"
     #  icon: "fas fa-fw fa-link"
