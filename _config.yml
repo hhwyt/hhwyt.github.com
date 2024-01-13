@@ -103,12 +103,12 @@ analytics:
 
 
 # Site Author
-#author:
-#  name             : "黄渭阳"
-#  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+author:
+  name             : "黄渭阳"
+  avatar           : "/assets/images/mylogo.jpeg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
 #  bio              : "I am an **amazing** person."
-#  location         : "Beijing"
-#  email            : hhwyt1@gmail.com
+  location         : "Beijing"
+  email            : hhwyt1@gmail.com
 #  links:
    # - label: "Email"
    #   icon: "fas fa-fw fa-envelope-square"
