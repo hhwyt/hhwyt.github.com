@@ -1,18 +1,14 @@
 ---
 layout: single
-title: About
+title: 黄渭阳
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+非著名作家，假冒互联网产品经理，资深数据库技术专家。毕业于西安邮电大学，先后就职于腾讯，偶数科技。
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+知乎：[@黄金架构师](https://www.zhihu.com/people/huang-wei-yang-70)
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+微信公众号：
+![img.png]({{ site.url }}{{ site.baseurl }}/assets/images/wechat.png)
 
-
-[jekyll-organization]: https://github.com/jekyll
+邮箱：hhwyt1@gmail.com

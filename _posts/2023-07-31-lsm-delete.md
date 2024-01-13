@@ -1,7 +1,7 @@
 ---
 layout: single 
 title: 全网最细！LSM-tree delete 的性能优化
-categories: [database]
+categories: [Database]
 ---
 
 本文的主要内容：

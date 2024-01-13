@@ -1,7 +1,7 @@
 ---
 layout: single 
 title: RocksDB 如何优化 LevelDB 的写入流程 (一)
-categories: [database]
+categories: [Database]
 ---
 
 本文的主要内容：

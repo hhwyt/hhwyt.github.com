@@ -1,7 +1,7 @@
 ---
 layout: single
 title: 优化 B-tree 的 range scan 性能
-categories: [database]
+categories: [Database]
 ---
 
 最近，我在工作中遇到了一个性能有问题的场景：客户的某种查询负载的 TPS 不满足他们的预期。经排查发现，瓶颈在二级索引 B-tree 的 range scan 上。老板知晓此事后，郑重其事的告诉我，赶紧把 B-tree 的 range scan 性能优化一下，这个客户是我们最头部的客户，要是优化不好，客户不满意，你就先回家休息几天吧！（开玩笑 :)

@@ -1,7 +1,7 @@
 ---
 layout: single 
 title: PingCAP 前景分析 vs 达梦,Cockroach (一)
-categories: [investment]
+categories: [Investment]
 ---
 
 最近在知乎上看到一个问题，大致问的是「PingCAP 裁员，国产数据库是不是要凉凉了」？PingCAP 的 TiDB 是我心目中的最牛的国产数据库，居然有人怀疑最牛的国产数据库和它所在的行业要凉凉了，我觉得这个想法很大胆，按捺不住写下这篇文章给出一个我的回答。 

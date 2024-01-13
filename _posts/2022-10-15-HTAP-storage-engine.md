@@ -1,7 +1,7 @@
 ---
 layout: single
 title: HTAP 存储引擎的设计与案例
-categories: [database]
+categories: [Database]
 ---
 
 这篇文章直接贴上一个之前写的 PPT :)

@@ -1,7 +1,7 @@
 ---
 layout: single
 title: LSM-tree 性能优化：Monkey, Dostoevsky
-categories: [database]
+categories: [Database]
 ---
 
 最近几天看了两篇 LSM-tree 优化的文章，简单总结一下。
