@@ -116,6 +116,7 @@ sysbench --db-driver=xxx --time=600 --threads=$num_thread --events=0 --rate=0 --
 
 ## 结果及归因
 ![oltp_write_only 测试结果](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310101120147.png)
+
 上图是 oltp_write_only 负载下的测试结果。
 
 整体上看，TiDB 的表现是全程优于 Postgres 的，128 线程时甚至达到了 Postgres 的 2x。
@@ -157,6 +158,7 @@ sysbench --db-driver=xxx --time=600 --threads=$num_thread --events=0 --rate=0 --
 
 ## 结果及归因
 ![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310111935317.png)
+
 上图是 oltp_write_only  负载下的测试结果。我在未调优版本的图上加上了调优后的测试结果。Postgres 调优后的名称叫 Postgres-ckpt-tuned（ckpt 是 checkpoint 的缩写），TiDB 调优后的名称叫 TiDB-region-tuned，它们都是用更深颜色的曲线表示，寓意「深度」调优。
 
 整体上看，Postgres 和 TiDB 调优后的性能都有所提升。值得注意的是，TiDB 的表现仍然优于 Postgres：Postgres 的峰值 TPS 大约在 1600，TiDB 的峰值 TPS 在 2000。
