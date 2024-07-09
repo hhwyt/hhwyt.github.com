@@ -2,6 +2,9 @@
 layout: single 
 title: 准确估算软件项目的时间
 categories: [Software Engineering]
+toc: true
+toc_label: "My Table of Contents"
+toc_icon: "cog"
 ---
 
 准确估算软件项目的时间有什么价值？低估和高估哪个危害更大？为什么准确估算很困难？我们又该如何实现准确估算？本文将探讨这些问题。
