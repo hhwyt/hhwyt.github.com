@@ -2,6 +2,9 @@
 layout: single
 title: B-tree 并发控制的演进
 categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 
 最近要在组内做个分享，讲一下 B-tree 并发控制的演进。由于最近大半年我一直在搞 LSM-tree，B-tree 的东西有点忘了，于是打算写下这篇文章打个草稿回忆一下，同时也希望对看到这篇文章的读者有一些帮助。

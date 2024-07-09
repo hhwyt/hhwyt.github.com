@@ -2,6 +2,9 @@
 layout: single
 title: 为什么 CockroachDB 的跨地域性能远超同行
 categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 
 之前有听说 CockroachDB 在跨地域部署（multi-region）方面的能力还不错，前段时间就花了几天时间研究了一下。主要是看了看 CockroachDB 在 SIGMOD 2022 上的一篇文章「Enabling the Next Generation of Multi-Region Applications with CockroachDB」以及他们的官方文档。看完之后，我的评价是：远超同行（哈哈，此处或有夸张；这里也要排除它开物理外挂的爸爸 Spanner）。本文就来趁热(我)打(没)铁(忘)介绍一下 CockroachDB 跨地域的设计。

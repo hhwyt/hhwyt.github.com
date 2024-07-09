@@ -2,6 +2,9 @@
 layout: single
 title: HTAP 存储引擎的设计与案例
 categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 
 这篇文章直接贴上一个之前写的 PPT :)

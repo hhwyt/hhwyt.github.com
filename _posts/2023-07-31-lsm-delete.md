@@ -2,6 +2,9 @@
 layout: single 
 title: 全网最细！LSM-tree delete 的性能优化
 categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 
 本文的主要内容：

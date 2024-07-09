@@ -2,6 +2,9 @@
 layout: single 
 title: 列存高效更新技术介绍
 categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 
 列存具有「读友好，写不友好」的特点。这个特点使列存和 AP 数据库仿佛王八看绿豆一样 —— 对上眼了。因为 AP 数据库正好重视读性能（大查询吞吐量），不重视写性能（能容忍 T+1h/1d 更新）。 于是，列存顺理成章地霸占了 AP 数据库的存储底座。

@@ -3,6 +3,9 @@ layout: single
 title:  "分布式 Schema 变更在 Google F1 的实践"
 date:   2021-03-27 00:00:00 +0800
 categories: [Distributed Systems]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 F1 团队发表的论文 [Online, Asynchronous schema change in F1](https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/41376.pdf) 针对具有「无状态计算层」，「共享存储层」和「没有全局成员列表」的分布式数据库提出了一种 Schema 变更的方案，该方案具备在线（不加锁，不阻塞 DML），异步（允许集群中的不同节点在不同的时刻切换到新版本的 Schema）的特点，同时论文中也提到了该方案在 F1 数据库中的实现。本文试图以尽量「通俗易懂」的文字，以及「形象生动」的图示，帮助读者快速理解该方案的设计与实现。通篇阅读本文耗时约 20 分钟。
 

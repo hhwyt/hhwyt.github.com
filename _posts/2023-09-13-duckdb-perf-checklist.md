@@ -2,6 +2,9 @@
 layout: single 
 title: DuckDB 性能测试列表和一些看法
 categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 
 开局一张 DuckDB 团队提供的性能测试 checklist，然后再开始编本文的内容。

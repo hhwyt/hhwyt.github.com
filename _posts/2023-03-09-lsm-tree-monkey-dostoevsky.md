@@ -2,6 +2,9 @@
 layout: single
 title: LSM-tree 性能优化：Monkey, Dostoevsky
 categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 
 最近几天看了两篇 LSM-tree 优化的文章，简单总结一下。

@@ -2,6 +2,9 @@
 layout: single
 title: 分布式锁的设计与实现(PART I)——Chubby
 categories: [Distributed Systems]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
 ---
 本文的写作目的是将分布式锁这一重要的分布式基础组件的几种典型设计与实现「剔肤见骨」地展示给各位读者（老毛病了，开头先自吹自擂一下)。写作背景是笔者在过去一段时间从事过分布式锁的研发工作，期间调研过多篇分布式锁典型实现的论文，在这里挑出比较优秀的三篇介绍一下。
 
