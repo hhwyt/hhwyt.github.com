@@ -4963,3 +4963,7 @@ body {
         height: 1px !important
     }
 }
+
+.width-half {
+    width: 50%
+}
