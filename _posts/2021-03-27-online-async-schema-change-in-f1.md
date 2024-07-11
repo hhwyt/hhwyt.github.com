@@ -38,7 +38,7 @@ F1 是 Google 家的一款分布式关系数据库，它具备以下特点：
   - F1 不存储全局成员列表。一来没有必要存，二来即便有全局成员列表，也没办法用它来做 F1 集群的全局同步，毕竟全球节点间的通信代价不菲。
 
 
-![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/architecture.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/architecture.png){: .align-center .width-half}
 
 <center>F1 架构图 </center>
 
@@ -55,7 +55,7 @@ F1 是一个典型的「SQL on NoSQL」的架构，关系数据库中的 Row（�
 
 这里贴上论文中给出的一张示意图，非常直观。
 
-![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/row-representation.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/row-representation.png){: .align-center .width-half}
 
 
 
@@ -175,7 +175,7 @@ F1 是 Google 的关键支撑系统，它必须得时刻保持稳定可用，否
 - WriteOnly
   - Schema 对所有 write 操作可见，包括 delete，update，insert。对 read 操作不可见。
 
-![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/schema-change-process.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/schema-change-process.png){: .align-center .width-half}
 
 <center> CREATE INDEX 的 Schema 状态转换图 </center>
 
@@ -236,7 +236,7 @@ ADD CONSTRAINT 不存在孤儿数据的问题，所以 DeleteOnly 状态就可�
 
 
 
-![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/all-schema-changes.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/all-schema-changes.png){: .align-center .width-half}
 
 上图是论文中给出的所有 Schema 变更的状态转换。其中 Change lock coverage 是 F1 特有的机制，略去不表。
 
@@ -258,7 +258,7 @@ F1 没有全局成员列表，如何协调 F1 server 一步步地做 Schema 的�
 
 F1 团队给出的答案是 Schema lease。每个 F1 server 都会被授予一个 Schema 的 lease，lease 时长通常为数分钟，F1 server 需要在 lease 过期前重新续约（F1 的实践是 lease 时长过了一半就续约），并按需加载新版本的 Schema。如果不能成功续约，则 F1 server 直接自杀（托管系统会自动重启它）。
 
-![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/schema-change-process-with-lease.png)
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2021-03-27-online-async-schema-change-in-f1/schema-change-process-with-lease.png){: .align-center .width-half}
 
 <center> CREATE INDEX 的 Schema 状态转换图（包含 lease） </center>
 

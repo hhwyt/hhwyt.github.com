@@ -9,7 +9,7 @@ toc_icon: "cog"
 
 开局一张 DuckDB 团队提供的性能测试 checklist，然后再开始编本文的内容。
 
-![DuckDB Benchmark Checklist](https://note-1253446680.cos.ap-beijing.myqcloud.com/baf91902-3db4-4f4d-a7b2-d667b813a3f1.png)
+![DuckDB Benchmark Checklist](https://note-1253446680.cos.ap-beijing.myqcloud.com/baf91902-3db4-4f4d-a7b2-d667b813a3f1.png){: .align-center .width-half}
 
 本文简单聊一下我对数据库性能测试的一些看法，顺带推荐一下 DuckDB 的性能测试 checklist。
 

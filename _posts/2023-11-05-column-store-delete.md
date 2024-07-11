@@ -21,7 +21,7 @@ toc_icon: "cog"
 
 # 列存更新的难点
 我认为主要面临两个难点：一个是写放大，另一个是无法简单地做 in-place update。
-![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202311031453825.png)
+![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202311031453825.png){: .align-center .width-half}
 
 首先这里的写放大特指 IO 次数的放大，具体来说：
 - 传统列存（每列一个文件）：写入需要每列一次磁盘 IO。尽管可以通过攒批来均摊开销，但大宽表（成百上千列）场景仍然力不从心。
@@ -42,7 +42,7 @@ toc_icon: "cog"
 最简单的 out-of-place update 方案是 file-level COW(copy-on-write) 。这种方案简单来说就是更新时无论更新一行还是一批，都直接把原文件拷贝出来更新，然后生成一个新文件。
 
 File-level COW 方案在业界的典型代表是 [Hudi COW 表](https://hudi.apache.org/docs/table_types/#copy-on-write-table)。
-![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310311701429.png)
+![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310311701429.png){: .align-center .width-half}
 Hudi COW 表的实现概述如下：
 1. 宏观上看，一张表的数据存储在 HDFS/S3 上的很多列存文件中。
 2. 更新时重写整个列存文件。因为要做写写冲突检测（ww-conflict check；为实现 snapshot isolation），更新需要保证可串行化。Hudi COW 通过 file-level 乐观锁来保证这一点。更新文件期间不加锁，commit 时检查有没有并发写事务抢先更新了相同的文件，如果有，那么自己就 abort。换句话说，不支持对同一文件的并发更新。
@@ -73,7 +73,7 @@ Hudi COW 表的实现概述如下：
 这类方案的典型代表是 [Iceberg MOR 表](https://www.dremio.com/blog/row-level-changes-on-the-lakehouse-copy-on-write-vs-merge-on-read-in-apache-iceberg/#h-merge-on-read-mor-%e2%80%93-best-for-tables-with-frequent-writesupdates:~:text=frequent%20updates%2Fdeletes-,merge-on-read%20(mor)%20%E2%80%93%20best%20for%20tables%20with%20frequent%20writes%2Fupdates,-With%20merge-on)。
 
 使用这类方案的数据库绝对地重视批量更新，轻视并发更新和单行更新，因此更新通过表锁来实现，仅支持 table-level concurrency。
-![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202311031702849.png)Iceberg MOR 表的实现概述如下：
+![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202311031702849.png){: .align-center .width-half}Iceberg MOR 表的实现概述如下：
 1. 宏观看是两个存储结构：存储主要数据的列存文件（data file）和存储标记删除的文件（delete file）。data file 和它对应的 delete file 会定期合并成新的 data file。
 2. 更新流程：update 看做 delete + insert。先向 delete file 追加一条 delete mark 删除老版本，然后把新版本写入 data file。
 	- Iceberg 的 delete mark 有两种：1. position delete：记录删除行在 data file 中的行号，行号需要在更新的时候从 data file 中查到。 2. equation delete：记录删除的等值条件。equation delete 的写入更高效，尤其是在根据非主键（唯一键）的等值删除场景。这个场景下一个等值条件会匹配很多行。equation delete 只记录一个等值条件，而 position delete 需要为每行查行号并为每行记录 delete mark。
@@ -90,7 +90,7 @@ Hudi COW 表的实现概述如下：
 这类方案的典型代表是 [Hudi MOR 表](https://hudi.apache.org/docs/next/table_types/#merge-on-read-table)。
 
 这类数据库的特点是重视批量更新，但没有 Iceberg 那么极端，所以并发度稍高一点，做到了 file-level。
-![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202311061122621.png)
+![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202311061122621.png){: .align-center .width-half}
 Hudi MOR 表的实现概述如下：
 1. 宏观看是两个存储结构：存储主要数据的列存文件（base file）和存储增量更新的行存文件（log file）。log file 采用行存对写比较友好。base file 和它对应的 log file 会定期合并成新的 base file。
 2. 更新流程：update 看做 delete + insert。先向 log file 插入一条 delete mark 来标记删除老版本，然后再向 log file 写入新版本。
@@ -124,7 +124,7 @@ position delete < 主键 delete，是因为 AP 数据库的更新大多数情况
 
 这类数据库非常「吝惜」存储空间，因此更新时只记录被更新的 field。
 
-![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310301907814.png)
+![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310301907814.png){: .align-center .width-half}
 Kudu 的实现概述如下
 1. 宏观看有点像一个只有 L0 层的 LSM-tree，但 Kudu 对于写入和更新分类处理。写入和更新分别使用自己的 memtable 和文件。写入写到行存 MemRowSet（Masstree 实现），定期刷盘成为 DiskRowSet 列存文件。更新写到行存 DeltaMemStore，定期刷盘成为 DiskRowSet 对应的 REDO records 文件。DiskRowSet 文件内嵌一个主键 B-tree 索引，用来加速主键点查。DiskRowSet 和 REDO records 文件会被周期性地合并。
 2. 更新流程：先根据主键查询在 DiskRowSet 中的行号，然后在 DeltaMemStore 中记录行号以及更新后的 field。因为只记了更新后的 field，有点像 redo log，所以文件名叫 REDO records。
@@ -148,7 +148,7 @@ Kudu 的方案是我最喜欢的方案。这个方案写并发高，写放大最
 > 提问：牺牲事务性，换取更新的性能，你认为值得吗？欢迎留言讨论。
 
 
-![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310312132365.png)
+![image.png](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310312132365.png){: .align-center .width-half}
 Doris MOR(unique-key 表) 的实现方式概述如下：
 1. 宏观上看是一个 LSM-tree，只有 memtable 和 L0 层列存文件。
 2. 更新流程：采用 LSM-tree 的做法，直接写入新版本，覆盖旧版本。
