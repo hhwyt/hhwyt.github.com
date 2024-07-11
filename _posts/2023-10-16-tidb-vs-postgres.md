@@ -192,7 +192,7 @@ TiDB 的性能瓶颈并没有发生变化，瓶颈仍然在 CPU 上。由于没�
 # 附录
 附上 oltp_insert 负载性能测试现场的监控。
 
-![oltp_insert: Postgres(non-tuned) 512-1024 threads（回光返照现象监控）](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310112249391.png){: .align-center .width-half}
+![oltp_insert: Postgres(non-tuned) 512-1024 threads（回光返照现象监控）](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310112249391.png)
 
 
-![oltp_insert：Postgres-ckpt-tuned vs TiDB(non-tuned)](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310112210579.png){: .align-center .width-half}
+![oltp_insert：Postgres-ckpt-tuned vs TiDB(non-tuned)](https://note-1253446680.cos.ap-beijing.myqcloud.com/202310112210579.png)
