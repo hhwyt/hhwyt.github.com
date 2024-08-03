@@ -9,7 +9,7 @@ toc_icon: "cog"
 
 Postgres Blink-tree 的实现参考了三篇论文：
 - 论文 1：《[Efficient Locking for Concurrent Operations on B-Trees](https://www.csd.uoc.gr/~hy460/pdf/p650-lehman.pdf)》—— Blink-tree 原始论文，仅提出了 insert 的实现方案。
-- 论文 2：《[A symmetric concurrent B-tree algorithm](https://dl.acm.org/doi/pdf/10.5555/324493.324589)》—— 原始论文的补充，讨论了 Blink-tree delete 的实现方案。
+- 论文 2：《[A symmetric concurrent B-tree algorithm](https://dl.acm.org/doi/pdf/10.5555/324493.324589)》—— 原始论文的补充，提出了 Blink-tree delete 的实现方案。
 - 论文 3：《[Prefix B-tree](https://dl.acm.org/doi/pdf/10.1145/320521.320530)》—— B-tree 前缀压缩论文。
 
 尽管这几篇论文的 idea 都非常出色，但在工程实现时，需要摒弃一些不切实际的假设，并针对现实场景进行专门的设计和优化。 
