@@ -27,7 +27,7 @@ TiKV 基于 Multi-Raft 架构 —— 数据按照 key range 被划分为很多�
 
 这个过程对 CPU 和 IO 的消耗不小，尤其是当扩缩容涉及大量 Region 时。因此，如何实现快速扩缩容并保证性能稳定，是一个不小的挑战。接下来，我们就来探讨 TiKV 在应对这个挑战时所做的一些工作。
 
-### 通过 IngestSST 来应用 snapshot
+## 通过 IngestSST 来应用 snapshot
 在应用 snapshot 这一步，TiKV 利用 RocksDB 的 IngestExternalFile（下面简称 IngestSST） 接口来提升速度。具体来说，在生成 snapshot 时，直接将 Region 数据转化为 zstd 压缩后的 SST 文件，并在传输到 target node 后，通过 IngestSST 将这些文件直接批量导入到 RocksDB。
 
 在扩缩容场景中，target node 通常不包含该 Region 的数据。如果这些 SST 文件与 RocksDB 的高层次 SST 文件没有 range overlap（也就是说不存在某个 SST 文件的 \[start key, end key) 区间包含了该 Region 的数据），那么它们很可能会被直接被导入到 RocksDB 的 bottommost level。
@@ -67,7 +67,7 @@ write stall 尽管保证了正确性，但影响了前台性能。为了降低 w
 
 基于这一特点，我在 [PR #18096](https://github.com/tikv/tikv/pull/18096) 中为 RocksDB IngestSST 增加了 `allow_write` 选项（目前尚未合入 upstream），使得在 IngestSST 期间可以继续前台写入操作。TiKV 启用了 `allow_write` 后，P99 raft apply wait duration 明显减少。
 
-![左边：优化前；右边：优化后]({{ site.url }}{{ site.baseurl }}/assets/images//2025-01-09-tikv-cluster-scaling/img_3.png){: .align-center .width-half}
+![左边：优化前；右边：优化后]({{ site.url }}{{ site.baseurl }}/assets/images//2025-01-09-tikv-cluster-scaling/img_3.png){: .align-center}
 
 ## 限制资源使用
 为避免 Region 迁移任务对前台性能产生影响，TiKV 对扩缩容任务的硬件资源使用率进行了限制，主要从以下两个方面进行优化：
