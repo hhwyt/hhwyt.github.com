@@ -54,16 +54,19 @@ The updated ingestion process works as follows:
 In most cases, the flush is handled manually, outside the write stall, effectively removing the MemTable flush from the ingestion path. 
 
 This optimization reduces TiKVs maximum write duration by approximately **100x**, as shown in the figure below:
-![(Left part: without optimization, Right part: with optimization)]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_2.png){: .align-center .width-half}
+![]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_2.png){: .align-center .width-half}
+(Left part: without optimization, Right part: with optimization)
+
 ## Second Attempt: No Write Stall Ingestion
 While the first optimization significantly reduced write stall duration, there is still room for further performance improvements, as write stalls still occur.
 
 **Can we eliminate the write stall entirely?** What if user can ensure that no concurrent overlapping writes occur?
 
 TiKV is based on Raft, a sequential commit consensus protocol, unlike Paxos. Therefore in TiKV, at any given time, for a specific Region, only one thread can write data at the **Raft layer**. This sequentiality holds true during:
-• **Region creation**, where a single thread ingests SST files to load the Region's data.
-• **Normal operations**, where a single thread handles foreground writes to the Region.
-• **Region destruction**, where a single thread processes the cleanup.
+
+- **Region creation**, where a single thread ingests SST files to load the Region's data.
+- **Normal operations**, where a single thread handles foreground writes to the Region.
+- **Region destruction**, where a single thread processes the cleanup.
 
 However, there is still a scenario where concurrent writes can occur—**compaction-filter GC**(garbage collection). compaction-filter GC is a low-level operation in the **RocksDB layer**, bypassing Raft's layer.
 
