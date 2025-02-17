@@ -1,3 +1,12 @@
+---
+layout: single 
+title: How TiKV Reduces Write Stalls Caused by RocksDB SST Ingestion
+categories: [Database]
+toc: true
+toc_label: "目录"
+toc_icon: "cog"
+---
+
 TiKV adopts RocksDB as its storage backend, utilizing RocksDB's 
 methods like [`Write()`](https://github.com/facebook/rocksdb/wiki/RocksDB-Overview#updates) for regular foreground key-value writes and [`IngestExternalFile()`](https://github.com/facebook/rocksdb/wiki/creating-and-ingesting-sst-files) method for bulk data loading. The latter directly ingests SST files into the levels of the RocksDB LSM-tree as low as possible, bypassing the expensive MemTable writes and reducing the number of compactions.
 
