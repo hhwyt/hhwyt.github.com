@@ -3,7 +3,7 @@ layout: single
 title: How TiKV Reduces Write Stalls Caused by RocksDB SST Ingestion
 categories: [Database]
 toc: true
-toc_label: "目录"
+toc_label: "Content"
 toc_icon: "cog"
 ---
 
