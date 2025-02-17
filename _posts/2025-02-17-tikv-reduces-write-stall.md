@@ -20,7 +20,7 @@ In this post, we'll explore this challenge in detail and discuss how TiKV addres
 RocksDB's sequence number consistency requires that, **for the same key in the LSM-tree, the sequence number of a higher-level key must be greater than that of a lower-level key**. This rule allows reads to return immediately if a key is found at a higher level, without needing to access lower levels. This reduces the cost of accessing lower levels, improving performance and ensuring that reads are up-to-date, thus preventing stale reads.
 ![RocksDB Ingestion]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_1.png){: .align-center .width-half}
 
-Keys in SST files ingested into RocksDB are assigned sequence numbers also have sequence numbers, typically assigned a global sequence number, which is recorded in the SST file's metadata. To prevent stale reads, SST files can only be ingested into a level of the LSM-tree if there are no overlapping keys at higher levels with smaller sequence numbers.
+Keys in SST files ingested into RocksDB also have sequence numbers, typically assigned a global sequence number, which is recorded in the SST file's metadata. To prevent stale reads, SST files can only be ingested into a level of the LSM-tree if there are no overlapping keys at higher levels with smaller sequence numbers.
 
 Another reason for maintaining sequence number consistency is **atomic reads**. Without consistency, a scan that should read only data from the ingested SST files may instead read a mix of stale data (from the MemTable or higher levels) and fresh data (from the ingested files), leading to inconsistencies.
 ## How IngestExternFile() maintains the Sequence Number Consistency
@@ -33,27 +33,27 @@ According to the RocksDB [wiki](https://github.com/facebook/rocksdb/wiki/creatin
 >- Assign the file a global sequence number
 >- **Resume writes to the DB**
 
-This “block-and-resume” process refers to the write stall mentioned earlier. The guarantees provided by this process include:
+This "block-and-resume" process refers to the write stall mentioned earlier. The guarantees provided by this process include:
 1. The overlapping key **before ingestion** must have a lower sequence number. If the key is in the MemTable, it will be flushed to L0, and the ingested data will also be placed in L0 but with a greater sequence number. A file with a greater sequence number at the same level is treated as "higher".
 2. No concurrent writes occur during this process, as writes are temporarily paused.
 3. The overlapping key **after ingestion** must have a greater sequence number, because sequence number increase sequentially.
 
-As mentioned earlier, this approach has its drawbacks and negatively impacts stable performance. Optimizing it could involve reducing the duration of the write stall or eliminating it altogether.
-## First Attempt: MemTable Flush Removed from Ingestion Path
-The first attempt([Pull Request #3775](https://github.com/tikv/tikv/pull/3775)) aimed to reduce the write stall duration by removing the Memtable flush from ingestion path. Flushing the MemTable is an expensive I/O operation, and eliminating it significantly reduces the duration of the write stall.
+As mentioned earlier, this approach negatively impacts stable performance. Optimizing it could involve reducing the duration of the write stall or eliminating it entirely.
+## First Attempt: Removing MemTable Flush from Ingestion Path
+The first attempt([Pull Request #3775](https://github.com/tikv/tikv/pull/3775)) aimed to reduce the write stall duration by removing the MemTable flush from ingestion path. Flushing MemTable is an expensive I/O operation, and eliminating it significantly reduces the duration of the write stall.
 
 This approach utilizing an option provided by RocksDB: `allow_blocking_flush`. When set to false, and if ingestion requires a memtable flush, the `IngestExternalFile()` will fail.
 
 The updated ingestion process works as follows:
-- The user first calls IngestExternalFile() with allow_blocking_flush = false.
+- The user first calls IngestExternalFile() with `allow_blocking_flush = false`.
 	- If no MemTable flush is needed, ingestion continues as usual.
 	- Else:
-		1. IngestExternalFile() fails, and the user must manually call Flush() to flush the MemTable.
-		2. After flushing, the user calls IngestExternalFile() again with allow_blocking_flush = true.
+		1. `IngestExternalFile()` fails, and the user must manually call `Flush()` to flush the MemTable.
+		2. After flushing, the user calls `IngestExternalFile()` **again** with `allow_blocking_flush = true`.
 
-In most cases, the flush is handled manually, outside the write stall, effectively removing the MemTable flush from the ingestion path. 
+In most cases, the flush is handled by manually `Flush()` call, outside the write stall, effectively removing the MemTable flush from the ingestion path. 
 
-This optimization reduces TiKVs maximum write duration by approximately **100x**, as shown in the figure below:
+This optimization reduces TiKVs maximum write duration by **~100x**, as shown in the figure below:
 ![]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_2.png){: .align-center .width-half}
 (Left part: without optimization, Right part: with optimization)
 
@@ -70,9 +70,9 @@ TiKV is based on Raft, a sequential commit consensus protocol, unlike Paxos. The
 
 However, there is still a scenario where concurrent writes can occur—**compaction-filter GC**(garbage collection). compaction-filter GC is a low-level operation in the **RocksDB layer**, bypassing Raft's layer.
 
-Compaction-filter GC is a more efficient garbage collection technique integrated into RocksDB's compaction process. It cleans up expired versions of keys during compaction, reducing read and write amplification compared to traditional GC methods, which involve scanning and deleting expired versions using RocksDB's `Write()` API.
+Compaction-filter GC is a more efficient garbage collection technique integrated into RocksDB's compaction process. It cleans up invalid versions of keys during compaction, reducing read and write amplification compared to traditional GC methods, which involve scanning and deleting invalid versions using RocksDB's `Write()` API.
 
-Since TiKV uses multiple column families, only keys in the **Write CF** contain version information (commit-ts) that determines the validity of a key. The Write CF is responsible for checking whether a key is expired during LSM-tree compaction. To prevent the **Default CF** from being unaware of key expiration after Write CF compaction-filter GC, GC must also be triggered for the Default CF during this process. This requires calling RocksDB's `Write()` API to perform GC on the Default CF, during Write CF compaction-filter GC which results in **foreground writes** in RocksDB.
+Since TiKV uses multiple column families(CFs), only the keys in the Write CF contain version information (`commit-ts`) that determines the validity of a key. To prevent the Default CF from being unaware of key validity after Write CF's compaction-filter GC, GC for the Default CF must be triggered during the Write CF's compaction-filter GC. This requires calling RocksDB's `Write()` API on the Default CF to delete invalid data, which is why compaction-filter results in foreground writes that may run concurrently with data ingestion.
 
 To eliminate the write stall while maintaining the safety of compaction-filter GC, the second attempt proposed the following:
 1. **Allowing concurrent writes during ingestion**: Introduce an `allow_write` option in RocksDB's IngestExternalFile() function was key. By setting allow_write = true, ingestion could proceed without triggering the write stall. RocksDB users must ensure that no concurrent overlapping writes occur during ingestion.
@@ -80,7 +80,7 @@ To eliminate the write stall while maintaining the safety of compaction-filter G
 	- Writes triggered by compaction-filter GC won't interfere with ingestion.
 	- Ingestion can safely set allow_write = true after acquiring the latch, avoiding the write stall.
 
-With this optimization, in the TPCC scenario, the P9999 write thread wait, which used to measured write stall, has been reduced by over **90% ~ 96%:
+With this optimization, in the TPCC scenario, the P9999 write thread wait, which used to measured write stall, has been reduced by over **90% ~ 96%**:
 ![]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_3.png){: .align-center .width-half}
 
 
@@ -88,4 +88,4 @@ TiKV's P99 Write Wait Latency (referred to as Apply Wait Latency in TiKV) has be
 ![]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_4.png){: .align-center .width-half}
 
 ## Summary
-This post describes TiKV's efforts to reduce write stalls during data ingestion. The first attempt removed the MemTable flush from the ingestion path, significantly cutting the write stall duration and reducing the maximum write duration by 100x. The second optimization introduced the allow_write option in RocksDB and implemented a range latch to prevent concurrent writes during compaction-filter GC and ingestion, effectively eliminating write stalls and improving performance. This optimization reduced the P9999 write thread wait latency by over 90% and P99 Write Wait Latency by ~50%.
+This post describes TiKV's efforts to reduce write stalls during data ingestion. The first attempt removed the MemTable flush from the ingestion path, significantly cutting the write stall duration and reducing the maximum write duration by 100x. The second optimization introduced the `allow_write` option in RocksDB and implemented a range latch in TiKV to prevent concurrent writes during compaction-filter GC and ingestion, effectively eliminating write stalls. This optimization reduced the P9999 write thread wait latency by over 90% and P99 Write Wait Latency by ~50%.
