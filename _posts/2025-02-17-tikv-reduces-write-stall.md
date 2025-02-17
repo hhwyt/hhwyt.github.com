@@ -10,15 +10,14 @@ toc_icon: "cog"
 TiKV adopts RocksDB as its storage backend, utilizing RocksDB's 
 methods like [`Write()`](https://github.com/facebook/rocksdb/wiki/RocksDB-Overview#updates) for regular foreground key-value writes and [`IngestExternalFile()`](https://github.com/facebook/rocksdb/wiki/creating-and-ingesting-sst-files) method for bulk data loading. The latter directly ingests SST files into the levels of the RocksDB LSM-tree as low as possible, bypassing the expensive MemTable writes and reducing the number of compactions.
 
+![RocksDB Ingestion]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_1.png){: .align-center .width-half}
 
-![TiKV architecture]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img.png){: .align-center .width-half}
 To ensure sequence number consistency, `IngestExternalFile()` triggers a write stall, temporarily pausing foreground writes during data ingestion. This can lead to latency jitter in writes, especially in cluster scaling scenarios where many Regions must be migrated(i.e., their data needs to be ingested to new nodes). In TiKV's architecture, multiple 
 Regions on the same node share the same RocksDB instance. When ingestion triggers a write stall, it halts all Regions' write on that node, significantly increasing long-tail write latency. This becomes a challenge in delivering stable performance for our customers.
 
 In this post, we'll explore this challenge in detail and discuss how TiKV addresses it.
 ## Sequence Number Consistency in RocksDB
 RocksDB's sequence number consistency requires that, **for the same key in the LSM-tree, the sequence number of a higher-level key must be greater than that of a lower-level key**. This rule allows reads to return immediately if a key is found at a higher level, without needing to access lower levels. This reduces the cost of accessing lower levels, improving performance and ensuring that reads are up-to-date, thus preventing stale reads.
-![RocksDB Ingestion]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_1.png){: .align-center .width-half}
 
 Keys in SST files ingested into RocksDB also have sequence numbers, typically assigned a global sequence number, which is recorded in the SST file's metadata. To prevent stale reads, SST files can only be ingested into a level of the LSM-tree if there are no overlapping keys at higher levels with smaller sequence numbers.
 
