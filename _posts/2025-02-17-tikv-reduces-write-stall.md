@@ -50,7 +50,7 @@ The first attempt([TiKV#3775](https://github.com/tikv/tikv/pull/3775)) aimed to 
 This approach utilizing an option provided by RocksDB: `allow_blocking_flush`. When set to false, and if `IngestExternalFile()` requires a memtable flush, the `IngestExternalFile()` will fail.
 
 The optimized ingestion process works as follows:
-- TiKV first calls IngestExternalFile() with `allow_blocking_flush = false`.
+- TiKV first calls `IngestExternalFile()` with `allow_blocking_flush = false`.
 	- If no MemTable flush is needed, ingestion continues as usual.
 	- Else:
 		1. `IngestExternalFile()` fails, and TiKV manually calls `Flush()` to flush the MemTable.
