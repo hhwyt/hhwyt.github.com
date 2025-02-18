@@ -2303,7 +2303,8 @@ blockquote.notice--danger {
     padding: 0.5rem 0.75rem;
     font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
     font-size: 1em;
-    font-weight: bold
+    font-weight: bold;
+    background-color:  #EFC344
 }
 
 .nav__sub-title {
