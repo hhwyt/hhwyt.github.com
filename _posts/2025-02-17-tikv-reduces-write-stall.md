@@ -8,7 +8,7 @@ toc_icon: "cog"
 ---
 
 TiKV adopts RocksDB as its storage backend, utilizing RocksDB's 
-methods like [`Write()`](https://github.com/facebook/rocksdb/wiki/RocksDB-Overview#updates) for regular foreground key-value writes and [`IngestExternalFile()`](https://github.com/facebook/rocksdb/wiki/creating-and-ingesting-sst-files) method for bulk data loading. The latter directly ingests SST files into the levels of the RocksDB LSM-tree as low as possible, bypassing the expensive MemTable writes and reducing the number of compactions.
+methods like [`Write()`](https://github.com/facebook/rocksdb/wiki/RocksDB-Overview#updates) for regular foreground key-value writes and [`IngestExternalFile()`](https://github.com/facebook/rocksdb/wiki/creating-and-ingesting-sst-files#ingesting-sst-files) method for bulk data loading. The latter directly ingests SST files into the levels of the RocksDB LSM-tree as low as possible, bypassing the expensive MemTable writes and reducing the number of compactions.
 
 ![RocksDB Ingestion]({{ site.url }}{{ site.baseurl }}/assets/images//2025-02-17-tikv-reduces-write-stall/img_1.png){: .align-center .width-half}
 
@@ -22,7 +22,7 @@ RocksDB's sequence number consistency requires that, **for the same key in the L
 Keys in SST files ingested into RocksDB also have sequence numbers, typically assigned a global sequence number, which is recorded in the SST file's metadata. To prevent stale reads, SST files can only be ingested into a level of the LSM-tree if there are no overlapping keys at higher levels with smaller sequence numbers.
 
 Another reason for maintaining sequence number consistency is **atomic reads**. Without consistency, a scan that should read only data from the ingested SST files may instead read a mix of stale data (from the MemTable or higher levels) and fresh data (from the ingested files), leading to inconsistencies.
-## How IngestExternFile() maintains the Sequence Number Consistency
+## How IngestExternFile() Maintains Sequence Number Consistency
 According to the RocksDB [wiki](https://github.com/facebook/rocksdb/wiki/creating-and-ingesting-sst-files#what-happens-when-you-ingest-a-file), we can see that:
 >**When you call DB::IngestExternalFile() We will**
 >- ...
@@ -74,8 +74,8 @@ Compaction-filter GC is a more efficient garbage collection technique integrated
 Since TiKV uses multiple column families(CFs), only the keys in the Write CF contain version information (`commit-ts`) that determines the validity of a key. To prevent the Default CF from being unaware of key validity after Write CF's compaction-filter GC, GC for the Default CF must be triggered during the Write CF's compaction-filter GC. This requires calling RocksDB's `Write()` API on the Default CF to delete invalid data, which is why compaction-filter results in foreground writes that may run concurrently with data ingestion.
 
 To eliminate the write stall while maintaining the safety of compaction-filter GC, the second attempt proposed the following:
-1. **Allowing concurrent writes during ingestion**: This PR([RocksDB#400](https://github.com/tikv/rocksdb/pull/400)) introduce an `allow_write` option in RocksDB's IngestExternalFile() function was key. By setting allow_write = true, ingestion could proceed without triggering the write stall. RocksDB users must ensure that no concurrent overlapping writes occur during ingestion.
-2. **Using a range latch for mutual exclusion**: This PR([TiKV#18096](https://github.com/tikv/tikv/pull/18096)) introduce a range latch to prevent conflicts between compaction-filter GC and data ingestion. The latch requires that both processes acquire the lock on the key range before proceeding. This guarantees that:
+1. **Allowing concurrent writes during ingestion**: This PR([RocksDB#400](https://github.com/tikv/rocksdb/pull/400)) introduces an `allow_write` option in RocksDB's IngestExternalFile() function was key. By setting allow_write = true, ingestion could proceed without triggering the write stall. RocksDB users must ensure that no concurrent overlapping writes occur during ingestion.
+2. **Using a range latch for mutual exclusion**: This PR([TiKV#18096](https://github.com/tikv/tikv/pull/18096)) introduces a range latch to prevent conflicts between compaction-filter GC and data ingestion. The latch requires that both processes acquire the lock on the key range before proceeding. This guarantees that:
 	- Writes triggered by compaction-filter GC won't interfere with ingestion.
 	- Ingestion can safely set allow_write = true after acquiring the latch, avoiding the write stall.
 
